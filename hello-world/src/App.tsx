@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 interface MovieProps {
@@ -25,10 +26,6 @@ interface AlbumProps {
   band_name: string;
   gatunek: string;
   songs: { title: string; duration: string }[];
-}
-interface Section{
-   title: string; 
-   children: React.ReactNode;
 }
 
 const moviesList: MovieProps[] = [
@@ -119,12 +116,12 @@ const albumsList: AlbumProps[] = [
   }
 ];
 
-let moviesSortedByTitle = moviesList.toSorted((a, b) => a.title.localeCompare(b.title))
-let booksSortedByTitle = booksList.toSorted((a, b) => a.title.localeCompare(b.title))
-let albumsSortedByTitle = albumsList.toSorted((a, b) => a.title.localeCompare(b.title))
+let moviesSortedByTitle = moviesList.toSorted((a,b) => a.title.localeCompare(b.title))
+let booksSortedByTitle = booksList.toSorted((a,b) => a.title.localeCompare(b.title))
+let albumsSortedByTitle = albumsList.toSorted((a,b) => a.title.localeCompare(b.title))
 
 let moviesAfter2010 = moviesList.filter(movie => movie.year > 2010)
-let booksSortedByYear = booksList.toSorted((a, b) => b.year - a.year)
+let booksSortedByYear = booksList.toSorted((a,b) => b.year - a.year)
 
 let albumWithMostSongs = albumsList[0]
 albumsList.forEach(album => {
@@ -133,67 +130,105 @@ albumsList.forEach(album => {
   }
 })
 
-function Section({title, children}: Section) {
+function Section({title, children}: { title: string; children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div>
-      <h1 onClick={() => setIsOpen(!isOpen)} style={{cursor:"pointer"}}>
+    <div className="mb-4">
+      <h2 
+        onClick={() => setIsOpen(!isOpen)} 
+        style={{ cursor: "pointer", userSelect: "none" }}
+        className="border-bottom pb-2"
+      >
         {isOpen ? "⏷" : "⏵"} {title}
-      </h1>
-      {isOpen && <div className='filmy'>{children}</div>}
+      </h2>
+      {isOpen && (
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
-function Movies({ title, year, img, rating }: MovieProps) {
+
+function Movies({title, year, img, rating}: MovieProps){
     return(
-      <div className='film'>
-        <img src={img} className='img'></img>
-        <p>{title}</p>
-        <p>{year}</p>
-        {rating >= 8 && <p>polecany</p>}
+      <div className="col">
+        <div className="card h-100">
+          <img src={img} className="card-img-top"></img>
+          <div className="card-body">
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">Rok: {year}</p>
+            {rating >= 8 && <span className="card-text">polecany</span>}
+          </div>
+        </div>
       </div>
     );
 }
+
 function Books({ title, year, img, pages }: BookProps) {
     return (
-      <div className='film'>
-        <img src={img} className='img'/>
-        <p><b>{title}</b></p>
-        <p>Rok: {year}</p>
-        <p>Strony: {pages}</p>
-        {year < 2000 && <p>Klasyka</p>}
+      <div className="col">
+        <div className="card h-100">
+          <img src={img} className="card-img-top"/>
+          <div className="card-body">
+            <h5 className="card-title"><b>{title}</b></h5>
+            <p className="card-text">Rok: {year}</p>
+            <p className="card-text">Strony: {pages}</p>
+            {year < 2000 && <span className="card-text">Klasyka</span>}
+          </div>
+        </div>
       </div>
     );
 }
 
 function Album({ title, year, img, band_name, gatunek, songs }: AlbumProps) {
     return (
-      <div className='film'>
-        <img src={img} className='img'/>
-        <p><b>{title}</b></p>
-        <p>{band_name}</p>
-        <p>gatunek: {gatunek}</p>
-        <p>Rok: {year}</p>
+    <div className="col">
+    <div className="card h-100">
+      <img src={img} className="card-img-top"/>
+      <div className="card-body">
+        <p className="card-title">{title}</p>
+        <p className="card-text">{year}</p>
+        <p className="card-text">{band_name}</p>
+        <p className="card-text">{gatunek}</p>
+
         <div>
           <p><b>Piosenki:</b></p>
           {songs.length > 0 ? (
-            <ul>
-              {songs.map((song, index) => (
-                <li key={index}>{song.title} ({song.duration})</li>
-              ))}
-            </ul>
+            <div className="table-responsive">
+              <table className="table table-striped table-hover table-sm">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Song Title</th>
+                    <th className="text-end">Duration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {songs.map((song, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{song.title}</td>
+                      <td className="text-end">{song.duration}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ):(
-            <p>Brak utworów</p>
+            <div className="alert alert-warning" role="alert">Brak utworów</div>
           )}
         </div>
       </div>
+    </div>
+    </div>
     );
 }
 
 function App() {
   return (
-    <div>
+    <div className="container">
       <Section title="Filmy alfabetycznie">
         {moviesSortedByTitle.map((movie) => (
           <Movies 
