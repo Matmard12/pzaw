@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './App.css'
 
 interface MovieProps {
@@ -24,6 +25,10 @@ interface AlbumProps {
   band_name: string;
   gatunek: string;
   songs: { title: string; duration: string }[];
+}
+interface Section{
+   title: string; 
+   children: React.ReactNode;
 }
 
 const moviesList: MovieProps[] = [
@@ -128,6 +133,18 @@ albumsList.forEach(album => {
   }
 })
 
+function Section({title, children}: Section) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div>
+      <h1 onClick={() => setIsOpen(!isOpen)} style={{cursor:"pointer"}}>
+        {isOpen ? "⏷" : "⏵"} {title}
+      </h1>
+      {isOpen && <div className='filmy'>{children}</div>}
+    </div>
+  );
+}
 function Movies({ title, year, img, rating }: MovieProps) {
     return(
       <div className='film'>
@@ -177,8 +194,7 @@ function Album({ title, year, img, band_name, gatunek, songs }: AlbumProps) {
 function App() {
   return (
     <div>
-      <h1>Filmy alfabetycznie</h1>
-      <div className='filmy'>
+      <Section title="Filmy alfabetycznie">
         {moviesSortedByTitle.map((movie) => (
           <Movies 
             key={movie.id} 
@@ -189,10 +205,9 @@ function App() {
             rating={movie.rating} 
           />
         ))}
-      </div>
+      </Section>
 
-      <h1>Książki alfabetycznie</h1>
-      <div className='filmy'>
+      <Section title="Książki alfabetycznie">
         {booksSortedByTitle.map((book) => (
           <Books 
             key={book.id} 
@@ -203,10 +218,9 @@ function App() {
             img={book.img} 
           />
         ))}
-      </div>
+      </Section>
 
-      <h1>Muzyka</h1>
-      <div className='filmy'>
+      <Section title="Muzyka">
         {albumsSortedByTitle.map((album) => (
           <Album 
             key={album.id}
@@ -219,10 +233,9 @@ function App() {
             songs={album.songs} 
           />
         ))}
-      </div>
+      </Section>
 
-      <h1>Filmy po 2010 roku</h1>
-      <div className='filmy'>
+      <Section title="Filmy po 2010 roku">
         {moviesAfter2010.map((movie) => (
           <Movies 
             key={movie.id} 
@@ -233,10 +246,9 @@ function App() {
             rating={movie.rating} 
           />
         ))}
-      </div>
+      </Section>
 
-      <h1>Książki posortowane po roku</h1>
-      <div className='filmy'>
+      <Section title="Książki posortowane po roku">
         {booksSortedByYear.map((book) => (
           <Books 
             key={book.id} 
@@ -247,12 +259,11 @@ function App() {
             img={book.img} 
           />
         ))}
-      </div>
-
-      <h1>Album z największą liczbą utworów</h1>
-      <div className='filmy'>
+      </Section>
+      
+      <Section title="Album z największą liczbą utworów">
         <Album{...albumWithMostSongs}/>
-      </div>
+      </Section>
     </div>
   );
 }
