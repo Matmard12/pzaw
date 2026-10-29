@@ -255,6 +255,9 @@ function App() {
   const [szukanyKsiążka, searchBook] = useState("");
   const [szukanyAlbum, searchAlbum] = useState("");
 
+  const filtrowanie = moviesSortedByTitle.filter(movie =>
+    movie.title.toLowerCase().includes(szukanyFilm.toLowerCase())
+  );
   return (
     <div className="container">
       <input
@@ -270,18 +273,21 @@ function App() {
 
     <p>{szukanyFilm}</p>
       <Section title="Filmy alfabetycznie">
-        {moviesSortedByTitle.map((movie) => (
-          <Movies 
-            key={movie.id} 
-            id={movie.id} 
-            title={movie.title} 
-            year={movie.year} 
-            img={movie.img} 
-            rating={movie.rating} 
-          />
-        ))}
+        {filtrowanie.length > 0 ? (
+          filtrowanie.map((movie) => (
+            <Movies 
+              key={movie.id} 
+              id={movie.id} 
+              title={movie.title} 
+              year={movie.year} 
+              img={movie.img} 
+              rating={movie.rating} 
+            />
+          ))
+        ):(
+          <p>Nie znaleziono filmów</p>
+        )}
       </Section>
-
     <input
       type="text"
       className="form-control"
