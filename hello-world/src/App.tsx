@@ -199,6 +199,10 @@ function Books({ title, year, img, pages }: BookProps) {
     );
 }
 
+function handleSongClick(title: string, album: string) {
+  console.log("wybrano utwor: " + title + " z " + album);
+}
+
 function Album({ title, year, img, band_name, gatunek, songs }: AlbumProps) {
     return (
     <div className="col">
@@ -224,7 +228,9 @@ function Album({ title, year, img, band_name, gatunek, songs }: AlbumProps) {
                 </thead>
                 <tbody>
                   {songs.map((song, index) => (
-                    <tr key={index}>
+                    <tr key={index}
+                      onClick={() => handleSongClick(song.title, title)}
+                    >
                       <td>{index + 1}</td>
                       <td>{song.title}</td>
                       <td className="text-end">{song.duration}</td>
@@ -244,8 +250,25 @@ function Album({ title, year, img, band_name, gatunek, songs }: AlbumProps) {
 }
 
 function App() {
+
+  const [szukanyFilm, searchMovie] = useState("");
+  const [szukanyKsiążka, searchBook] = useState("");
+  const [szukanyAlbum, searchAlbum] = useState("");
+
   return (
     <div className="container">
+      <input
+      type="text"
+      className="form-control"
+      placeholder="Wpisz tytuł"
+      id="movie-search"
+      onChange={(event)=>{
+        console.log(event.target.value);
+        searchMovie(event.target.value);
+      }}
+    />
+
+    <p>{szukanyFilm}</p>
       <Section title="Filmy alfabetycznie">
         {moviesSortedByTitle.map((movie) => (
           <Movies 
@@ -259,6 +282,18 @@ function App() {
         ))}
       </Section>
 
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Wpisz tytuł"
+      id="book-search"
+      onChange={(event)=>{
+        console.log(event.target.value);
+        searchBook(event.target.value);
+      }}
+    />
+
+    <p>{szukanyKsiążka}</p>
       <Section title="Książki alfabetycznie">
         {booksSortedByTitle.map((book) => (
           <Books 
@@ -271,6 +306,18 @@ function App() {
           />
         ))}
       </Section>
+
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Wpisz tytuł"
+      id="album-search"
+      onChange={(event)=>{
+        console.log(event.target.value);
+        searchAlbum(event.target.value);
+      }}
+    />
+    <p>{szukanyAlbum}</p>
 
       <Section title="Muzyka">
         {albumsSortedByTitle.map((album) => (
