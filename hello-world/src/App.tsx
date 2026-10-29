@@ -152,18 +152,35 @@ function Section({title, children}: { title: string; children: React.ReactNode }
 }
 
 function Movies({title, year, img, rating}: MovieProps){
-    return(
-      <div className="col">
-        <div className="card h-100">
-          <img src={img} className="card-img-top"></img>
-          <div className="card-body">
-            <h5 className="card-title">{title}</h5>
-            <p className="card-text">Rok: {year}</p>
-            {rating >= 8 && <span className="card-text">polecany</span>}
-          </div>
+  return (
+    <div
+      className="col"
+      onClick={() => {
+        console.log("wybrano film: " + title);
+      }}
+    >
+      <div className="card h-100">
+        <img
+          src={img}
+          className="card-img-top"
+        />
+        <div className="card-body">
+          <h5 className="card-title">{title}</h5>
+          <p className="card-text">Rok: {year}</p>
+          <button
+            className="card-text"
+            onClick={(event) => {
+              console.log("Pokaż szczegóły dla " + title);
+              event.stopPropagation();
+            }}
+          >
+            Pokaż szczegóły
+          </button><br></br>
+          {rating >= 8 && <span className="card-text">polecany</span>}
         </div>
       </div>
-    );
+    </div>
+  );
 }
 
 function Books({ title, year, img, pages }: BookProps) {
