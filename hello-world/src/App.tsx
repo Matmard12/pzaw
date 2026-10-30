@@ -76,8 +76,6 @@ function ListaZadan() {
 
       </div>
 
-      
-
       <ul>
         {posortowaneZadania.map((zadanie) => (
           <li key={zadanie.id}>
